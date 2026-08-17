@@ -1,0 +1,11 @@
+transformers==4.44.2
+peft==0.11.1
+accelerate==0.33.0
+evaluate==0.4.1
+rouge-score
+sacrebleu
+bert-score
+sentencepiece
+datasets==2.16.0
+numpy
+torch
