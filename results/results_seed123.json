@@ -1,0 +1,8 @@
+{
+  "seed": 123,
+  "data_sizes": {"train": 58829, "val": 9266, "test": 8399},
+  "ppl_static": 13.42920084801897,
+  "ppl_dynapersona": 13.512985247947313,
+  "bootstrap": {"mean_diff": -0.08381713644075693, "ci95": [-0.11685191240321209, -0.05047909523263773], "p_dyna_better": 0.0},
+  "improvement_ppl_pct": -0.6238971393498974
+}
