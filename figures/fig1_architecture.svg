@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="520" viewBox="0 0 600 520">
+<style>text{font-family:serif;fill:#222}.box{stroke:#274b7a;stroke-width:2;rx:8}.arrow{stroke:#333;stroke-width:2;fill:none;marker-end:url(#a)}</style>
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#333"/></marker></defs>
+<rect class="box" x="130" y="35" width="340" height="85" fill="#fdefe6"/><text x="300" y="70" font-size="23" text-anchor="middle">Context c</text><text x="300" y="100" font-size="21" text-anchor="middle">(persona, emotion, style)</text>
+<line class="arrow" x1="300" y1="120" x2="300" y2="165"/>
+<rect class="box" x="165" y="170" width="270" height="70" fill="#eaf6ee"/><text x="300" y="214" font-size="22" text-anchor="middle">Gate g(c) = softmax</text>
+<line class="arrow" x1="300" y1="240" x2="300" y2="285"/>
+<rect class="box" x="125" y="290" width="350" height="80" fill="#eef3fb"/><text x="300" y="322" font-size="22" text-anchor="middle">K experts BₖAₖ</text><text x="300" y="351" font-size="20" text-anchor="middle">(each rank r/K)</text>
+<line class="arrow" x1="300" y1="370" x2="300" y2="415"/>
+<rect class="box" x="115" y="420" width="370" height="70" fill="#f2f2f2"/><text x="300" y="463" font-size="21" text-anchor="middle">Frozen W₀ + Σₖ gₖBₖAₖ</text>
+</svg>
