@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="430" viewBox="0 0 480 430">
+<style>text{font-family:serif;fill:#222}.axis{stroke:#222;stroke-width:1.5}.err{stroke:#222;stroke-width:1.5}</style>
+<line class="axis" x1="70" y1="35" x2="70" y2="350"/><line class="axis" x1="70" y1="350" x2="450" y2="350"/>
+<text x="25" y="210" font-size="18" text-anchor="middle" transform="rotate(-90 25 210)">Test perplexity</text>
+<text x="60" y="345" font-size="14" text-anchor="end">13.7</text><text x="60" y="265" font-size="14" text-anchor="end">13.9</text><text x="60" y="185" font-size="14" text-anchor="end">14.1</text><text x="60" y="105" font-size="14" text-anchor="end">14.3</text>
+<rect x="110" y="114" width="75" height="236" fill="#9db9d8"/><rect x="235" y="167" width="75" height="183" fill="#6f97c6"/><rect x="360" y="249" width="75" height="101" fill="#274b7a"/>
+<line class="err" x1="147.5" y1="99" x2="147.5" y2="129"/><line class="err" x1="137" y1="99" x2="158" y2="99"/><line class="err" x1="137" y1="129" x2="158" y2="129"/>
+<line class="err" x1="272.5" y1="157" x2="272.5" y2="177"/><line class="err" x1="262" y1="157" x2="283" y2="157"/><line class="err" x1="262" y1="177" x2="283" y2="177"/>
+<line class="err" x1="397.5" y1="244" x2="397.5" y2="254"/><line class="err" x1="387" y1="244" x2="408" y2="244"/><line class="err" x1="387" y1="254" x2="408" y2="254"/>
+<text x="147.5" y="88" font-size="16" text-anchor="middle">14.278</text><text x="272.5" y="146" font-size="16" text-anchor="middle">14.145</text><text x="397.5" y="233" font-size="16" text-anchor="middle">13.941</text>
+<text x="147.5" y="375" font-size="16" text-anchor="middle">Static</text><text x="147.5" y="395" font-size="16" text-anchor="middle">LoRA</text>
+<text x="272.5" y="375" font-size="16" text-anchor="middle">SLIM</text><text x="272.5" y="395" font-size="16" text-anchor="middle">routed</text>
+<text x="397.5" y="375" font-size="15" text-anchor="middle">DynaPersona</text><text x="397.5" y="395" font-size="16" text-anchor="middle">-MoE</text>
+</svg>
