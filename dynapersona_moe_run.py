@@ -1,5 +1,6 @@
 """
-DynaPersona-MoE + baselines, multi-style dialogue (EmpatheticDialogues + PersonaChat).
+DynaPersona-MoE + baselines on a two-source dialogue benchmark
+(EmpatheticDialogues + PersonaChat).
 
 Per seed, all systems use the same rank-32 LoRA adapter-rank budget:
   1. static LoRA            (no routing)
@@ -7,6 +8,12 @@ Per seed, all systems use the same rank-32 LoRA adapter-rank budget:
   3. DynaPersona-MoE        (K experts + context softmax gate + load balancing)
 Each model is evaluated for perplexity, generation metrics, and latency/memory,
 and best-validation checkpoints are saved under the configured project root.
+
+The stored source labels are `empathetic` and `persona`. The imported StyleEncoder has the
+legacy vocabulary `empathetic`, `informative`, `casual` and maps unknown labels to slot 0,
+so both source groups use the same encoded style slot in the reported experiment. Routing
+summaries grouped by these stored labels are therefore source-grouped, not evidence of a
+distinct style-vector effect.
 
 Reuses data/encoders/measurements from dynapersona_full_run.py.
 Env: SMOKE=1 (fast check), K_EXPERTS (default 4), LB_LAMBDA (default 0.01),
@@ -63,10 +70,12 @@ def _load_personachat(max_pairs_per_split):
             to_pairs(val.select(range(n // 2, n)), max_pairs_per_split // 6))
 
 
+# Legacy function name retained so old run commands/checks remain compatible. It builds the
+# two-source benchmark used in the manuscript.
 def build_multistyle_data(smoke=False):
     tag = "_smoke" if smoke else ""
     if os.path.exists(f"{DATA_DIR}/ms_train{tag}.pkl"):
-        log("Multistyle data already present.")
+        log("Two-source data already present.")
         return
     base.build_data()
     ed_tr = base.load_split("train"); ed_va = base.load_split("val"); ed_te = base.load_split("test")
@@ -81,7 +90,7 @@ def build_multistyle_data(smoke=False):
         random.Random(0).shuffle(blend)
         with open(f"{DATA_DIR}/ms_{name}{tag}.pkl", "wb") as f:
             pickle.dump(blend, f)
-        log(f"ms_{name}: {len(blend)} pairs (styles: empathetic + persona)")
+        log(f"ms_{name}: {len(blend)} pairs (sources: EmpatheticDialogues + PersonaChat)")
 
 
 def load_ms(name, smoke=False):
@@ -166,6 +175,9 @@ class MoEModel(nn.Module):
                 m.A.float(); m.B.float()
         self.persona = PersonaEncoder(256).to(DEVICE)
         self.emotion = EmotionEncoder()
+        # The imported StyleEncoder maps the stored PersonaChat label `persona` to slot 0,
+        # the same slot used by `empathetic`; the style component is therefore constant
+        # across the two source groups in the reported experiment.
         self.style = StyleEncoder()
         self.gate = nn.Sequential(nn.Linear(256 + 29 + 3, 128), nn.ReLU(), nn.Dropout(0.1),
                                   nn.Linear(128, K)).to(DEVICE)
@@ -287,6 +299,7 @@ def train_moe(model, tr, va, seed):
 
 @torch.no_grad()
 def expert_usage_by_style(model, data, tok, n=2000):
+    """Legacy name: aggregate routing by stored source labels, not distinct encoded style slots."""
     model.model.eval()
     from collections import defaultdict
     by = defaultdict(lambda: np.zeros(model.K)); cnt = defaultdict(int)
@@ -343,6 +356,8 @@ def run_seed(seed, smoke=False):
     mp = perplexity(moe, te, tok); R["ppl_moe"] = mp["ppl"]
     R["gen_moe"] = gen_metrics(moe, te, tok, CFG["gen_eval_n"])
     R["profile_moe"] = _profile(moe, tok)
+    # Historical key retained so the released JSON schema remains unchanged. The values are
+    # grouped by stored source labels (`empathetic`, `persona`).
     R["expert_usage_by_style"] = expert_usage_by_style(moe, te, tok)
     R["bootstrap"] = bootstrap_ppl_diff(sp["per_example"], mp["per_example"], CFG["bootstrap_n"])
     R["bootstrap_moe_vs_slim"] = bootstrap_ppl_diff(lp["per_example"], mp["per_example"], CFG["bootstrap_n"])
