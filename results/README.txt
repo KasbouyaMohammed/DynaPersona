@@ -1,11 +1,13 @@
 Released computational result files.
 
-Multi-style files:
+Two-source benchmark files:
   results_seed42_moe.json
   results_seed123_moe.json
   results_seed7_moe.json
 
 These contain the per-seed parameter inventories, training/validation summaries, perplexities, generation metrics, profiling measurements, routing summaries, and paired-bootstrap summaries used in the manuscript. Generated-text examples are omitted from this review package because they are not used to compute the reported tables.
+
+The historical JSON field `expert_usage_by_style` groups routing by the stored source labels (`empathetic` for EmpatheticDialogues and `persona` for PersonaChat). It should be interpreted as source-grouped routing. In the reported experiment both labels map to the same encoded style slot, so this field is not evidence of a distinct style-vector effect.
 
 Single-source control files:
   results_seed42.json
