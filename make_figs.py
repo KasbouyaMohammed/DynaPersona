@@ -39,7 +39,7 @@ def arrow(x1, y1, x2, y2):
     ax.add_patch(FancyArrowPatch((x1, y1), (x2, y2), arrowstyle="-|>",
                                  mutation_scale=11, lw=1.1, color="#333333"))
 
-box(2.1, 7.8, 5.8, 1.15, "Context $c$\n(persona, emotion, style)", "#fdefe6")
+box(2.1, 7.8, 5.8, 1.15, "Context $c$\n(persona, emotion, style slot)", "#fdefe6")
 box(2.7, 5.65, 4.6, 1.05, "Gate  $g(c)$ = softmax", "#eaf6ee")
 box(2.0, 3.35, 6.0, 1.10, "$K$ experts  $B_kA_k$\n(each rank $r/K$)", "#eef3fb")
 box(2.0, 1.05, 6.0, 1.10, "Frozen $W_0 + \\Sigma_k g_k B_kA_k$", "#f2f2f2")
@@ -61,20 +61,22 @@ for b, m in zip(bars, means):
 ax.tick_params(labelsize=9)
 save_both(fig, "fig2_perplexity")
 
-# Fig. 3: routing weights by corpus-defined style (representative seed 42)
+# Fig. 3: routing weights grouped by source (representative seed 42).
+# The historical result field is named `expert_usage_by_style`, but its two groups are the
+# stored source labels. Both groups map to the same encoded style slot in the reported run.
 empathetic = [0.308, 0.272, 0.162, 0.258]
 persona = [0.175, 0.250, 0.339, 0.235]
 x = np.arange(4)
 width = 0.38
-fig, ax = plt.subplots(figsize=(3.3, 3.0))
-ax.bar(x - width / 2, empathetic, width, label="empathetic", hatch="///", edgecolor="black")
-ax.bar(x + width / 2, persona, width, label="persona", hatch="...", edgecolor="black")
+fig, ax = plt.subplots(figsize=(3.6, 3.0))
+ax.bar(x - width / 2, empathetic, width, label="EmpatheticDialogues", hatch="///", edgecolor="black")
+ax.bar(x + width / 2, persona, width, label="PersonaChat", hatch="...", edgecolor="black")
 ax.axhline(0.25, ls="--", lw=0.8, color="#777777")
 ax.set_xticks(x)
 ax.set_xticklabels([f"E{i + 1}" for i in range(4)], fontsize=9)
 ax.set_ylabel("Mean routing weight")
 ax.set_xlabel("Expert")
-ax.legend(fontsize=9, frameon=False)
+ax.legend(fontsize=8, frameon=False)
 ax.tick_params(labelsize=9)
 save_both(fig, "fig3_expert_usage")
 
