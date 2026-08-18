@@ -2,9 +2,15 @@
 
     python regenerate_tables.py path/to/results
 
-Expects the multi-style files results_seed{42,123,7}_moe.json produced by dynapersona_moe_run.py,
-and optionally the single-style control files results_seed{42,123,7}.json from dynapersona_full_run.py.
+Expects the two-source benchmark files results_seed{42,123,7}_moe.json produced by
+`dynapersona_moe_run.py`, and optionally the single-source control files
+results_seed{42,123,7}.json from `dynapersona_full_run.py`.
 Values are read from the released result files.
+
+Note: the historical JSON key `expert_usage_by_style` is retained for compatibility with
+the original run output. It groups by the stored source labels (`empathetic` and `persona`);
+those labels map to the same encoded style slot in the reported experiment, so the table is
+reported as source-grouped routing rather than as a distinct style-vector effect.
 """
 import sys, json, glob, os
 from statistics import mean, pstdev
@@ -34,11 +40,11 @@ def fmt_ci(b):
 def main(res_dir):
     ms = load(os.path.join(res_dir, "results_seed*_moe.json"))
     if not ms:
-        print("No multi-style results found in", res_dir); return
+        print("No two-source benchmark results found in", res_dir); return
     seeds = [r["seed"] for r in ms]
 
     print("=" * 78)
-    print("TABLE 1  Trainable-parameter inventory (multi-style, seed", seeds[0], ")")
+    print("TABLE 1  Trainable-parameter inventory (two-source benchmark, seed", seeds[0], ")")
     pis = ms[0].get("param_inventory_static", {})
     pim = ms[0].get("param_inventory_moe", {})
     print("  static LoRA total :", f"{pis.get('total_trainable', 0):,}", pis.get("by_module"))
@@ -92,7 +98,7 @@ def main(res_dir):
             print(f"  {name:<16}" + "".join(f"{v:<24.2f}" for v in row))
 
     print("=" * 78)
-    print("TABLE 5  Expert usage by style (per seed)")
+    print("TABLE 5  Expert usage by source group (per seed)")
     for r in ms:
         eu = r.get("expert_usage_by_style", {})
         print(f"  seed {r['seed']}:", {k: [round(x, 3) for x in v] for k, v in eu.items()})
@@ -100,7 +106,7 @@ def main(res_dir):
     ss = load(os.path.join(res_dir, "results_seed*[0-9].json"))
     if ss:
         print("=" * 78)
-        print("TABLE 6  Single-style control (EmpatheticDialogues; scalar gate)")
+        print("TABLE 6  Single-source control (EmpatheticDialogues; scalar gate)")
         st = col(ss, "ppl_static"); dy = col(ss, "ppl_dynapersona")
         if st and dy:
             print(f"  static mean {mean(st):.3f}   scalar-gate mean {mean(dy):.3f}   "
